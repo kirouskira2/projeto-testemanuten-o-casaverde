@@ -1,0 +1,3 @@
+br\com\casaverde\api\controllers\ClienteControllerTest.class
+br\com\casaverde\api\controllers\ImovelControllerTest.class
+br\com\casaverde\api\controllers\VisitaControllerTest.class

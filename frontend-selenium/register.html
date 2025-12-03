@@ -160,7 +160,7 @@
     });
     
     // Form validation and submission
-    document.getElementById('sign-up-button').addEventListener('click', (e) => {
+    document.getElementById('sign-up-button').addEventListener('click', async (e) => {
       e.preventDefault();
       
       const fullName = document.getElementById('fullName').value.trim();
@@ -184,14 +184,36 @@
         return;
       }
       
-      // Animação de sucesso e redirecionamento
+      // Animação de sucesso e chamada API
       const button = e.target;
+      const originalText = button.textContent;
       button.textContent = 'Criando conta...';
       button.disabled = true;
       
-      setTimeout(() => {
-        window.location.href = 'sms-confirmation.html';
-      }, 1000);
+      try {
+        const response = await fetch('http://localhost:8080/api/clientes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: fullName,
+            email: email,
+            senha: password
+          })
+        });
+
+        if (response.ok) {
+          window.location.href = 'sms-confirmation.html';
+        } else {
+          alert('Erro ao criar conta. Verifique os dados ou tente outro e-mail.');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro de conexão. Verifique se o backend Java está rodando na porta 8080.');
+        button.textContent = originalText;
+        button.disabled = false;
+      }
     });
     
     // Smooth transition for login link
